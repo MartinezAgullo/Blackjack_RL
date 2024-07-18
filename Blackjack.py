@@ -3,6 +3,7 @@ from collections import defaultdict # Provides a default value for the key that 
 from tqdm import tqdm # Progress bar
 import numpy as np
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 ###################
@@ -10,6 +11,7 @@ import seaborn as sns
 ###################
 def main():
     msg = MsgServer(algName='BlackjackEnv', debugLevel=1)
+    msg.printGreen("Running Blackjack.py")
 
 
     env = gym.make('Blackjack-v1', natural=False, sab=False) # If sab is True, the keyword argument natural will be ignored
@@ -20,7 +22,7 @@ def main():
     observation, info = env.reset(seed=None)
     msg.printDebug(f"Game reset: observation={observation}, info={info}")
 
-
+    msg.printGreen("Build Q-agent")
     # hyperparameters
     learning_rate = 0.01
     n_episodes = 100_000
@@ -39,6 +41,7 @@ def main():
 
     env = gym.wrappers.RecordEpisodeStatistics(env, deque_size=n_episodes)
     
+    msg.printGreen("Training")
     for episode in tqdm(range(n_episodes)): #tqdm  adds a progress barr
         obs, info = env.reset()
         done = False
@@ -57,35 +60,35 @@ def main():
 
         agent.decay_epsilon()
 
-    """
-    i = 0
-    while i < 100:
-        i +=1
-        action = env.action_space.sample()  # agent policy that uses the observation and info
-        observation, reward, terminated, truncated, info = env.step(action)
 
-        msg.printDebug(f"Game number {i}")
-        msg.printDebug(f"  terminated={terminated}")
-        #msg.printDebug(f"  truncated={truncated}")
-        msg.printDebug("  Observation")
-        #msg.printDebug(f"  Observation={observation}")
-        msg.printDebug(f"    CurrentSum={observation[0]}")
-        msg.printDebug(f"    DealersCard={observation[1]}")
-        if observation[2]==0:
-            msg.printDebug("    HoldsAce=No")
-        if observation[2]==1:
-            msg.printDebug("    HoldsAce=Yes")
-        if action == 0:
-            msg.printDebug(f"  Action=Stick")
-        if action == 1:
-            msg.printDebug(f"  Action=Hit")
-        msg.printDebug(f"  Reward={reward}")    
-        #msg.printDebug(f"  Info={info}")
+    # Visualize training
+    msg.printGreen("Visualize training")
+    rolling_length = 500 #Defines the window size for computing the moving average
+    fig, axs = plt.subplots(ncols=3, figsize=(12, 5))
+    axs[0].set_title("Rewardss per episode")
+    # compute and assign a rolling average of the data to provide a smoother graph
+    # np.convolve = linear convolution of two one-dimensional sequences
+    reward_moving_average = (np.convolve(np.array(env.return_queue).flatten(), np.ones(rolling_length), mode="valid")/rolling_length)
+    axs[0].plot(range(len(reward_moving_average)), reward_moving_average)
+    axs[0].set_xlabel("Episodes")
 
-        if terminated or truncated:
-            msg.printDebug("Reset")
-            observation, info = env.reset()
-    """    
+    axs[1].set_title("Episode lengths")
+    length_moving_average = (np.convolve(np.array(env.length_queue).flatten(), np.ones(rolling_length), mode="same")/rolling_length)
+    axs[1].plot(range(len(length_moving_average)), length_moving_average)
+    axs[1].set_xlabel("Episodes")
+
+    axs[2].set_title("Training Error")
+    training_error_moving_average = (np.convolve(np.array(agent.training_error), np.ones(rolling_length), mode="same")/rolling_length)
+    axs[2].plot(range(len(training_error_moving_average)), training_error_moving_average)
+    axs[2].set_xlabel("Episodes")
+    
+    plt.tight_layout()
+    path = 'training_progress.png'
+    plt.savefig()
+    msg.printInfo(f"Figure saved in {path}")
+
+    # Visualize policy
+    msg.printGreen("Visualize policy")
 
     env.close()
 
@@ -156,6 +159,10 @@ class BlackjackAgent:
 
     def decay_epsilon(self):
         self.epsilon = max(self.final_epsilon, self.epsilon - self.epsilon_decay)
+
+
+
+
 
 
 
