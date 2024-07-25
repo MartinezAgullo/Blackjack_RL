@@ -112,10 +112,6 @@ def main():
     msg.printInfo(f"Policy figure saved in {path2}")
 
 
-
-
-
-
     env.close()
     msg.printInfo("End")
 

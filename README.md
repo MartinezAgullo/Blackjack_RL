@@ -68,7 +68,7 @@ The finish if the following happens:
 
 # Policy
 With usable ace:
-![Policy](https://github.com/MartinezAgullo/Blackjack_RL/blob/main/Policy_withOutUsableAce.png)
+![Policy](https://github.com/MartinezAgullo/Blackjack_RL/blob/main/Policy_withUsableAce.png)
 
 
 Without usable ace:
