@@ -1,3 +1,10 @@
+# Ussage
+To train and save the model
+    python Train_Blackjack.py
+To play it
+    python Play_Blackjack.py
+
+
 # Blackjack
 
 Training a reinforced learning model to learn to play Blackjack. It is based on Farama's Gymnasium [ToyText](https://gymnasium.farama.org/environments/toy_text/blackjack/) environment.
@@ -25,7 +32,6 @@ If neither the player nor the dealer busts, the outcome (win, lose, draw) is dec
  
 ### Action space
 Two possible actions: stick (0) or hit (1).
-
   
 
 ### Observation Space
@@ -52,3 +58,18 @@ Note: An ace will always be counted as usable (11) unless it busts the player.
 The finish if the following happens:
 	 a)   The player hits and the sum of hand exceeds 21.
 	 b)  The player sticks.
+
+
+# Train
+![training_progress](https://github.com/MartinezAgullo/Blackjack_RL/blob/main/training_progress.png)
+
+
+
+
+# Policy
+With usable ace:
+![Policy](https://github.com/MartinezAgullo/Blackjack_RL/blob/main/Policy_withOutUsableAce.png)
+
+
+Without usable ace:
+![Policy](https://github.com/MartinezAgullo/Blackjack_RL/blob/main/Policy_withOutUsableAce.png)

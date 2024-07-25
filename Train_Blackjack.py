@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch # 2D artist 
-import pickle
+import json
 
 
 
@@ -64,10 +64,10 @@ def main():
         agent.decay_epsilon()
 
     # Save the model
-    with open('blackjack_model.pkl', 'wb') as f:
-        pickle.dump(agent.q_values, f)
-    msg.printInfo("Model saved as 'blackjack_model.pkl'")
-
+    q_values_json = convert_q_values(agent.q_values)
+    with open('blackjack_model.json', 'w') as f:
+        json.dump(q_values_json, f)
+    msg.printInfo("Model saved as 'blackjack_model.json'")
     # Visualize training
     msg.printGreen("Visualize training")
     rolling_length = 500 #Defines the window size for computing the moving average
@@ -339,6 +339,13 @@ class MsgServer:
     def printBold(self, msg):
         print(f'{self.BOLD}{self.algName:<16} {"INFO":<12} {msg}{self.EndColor}')
 
+
+def default_q_values():
+    return np.zeros(2)  # Assuming 2 actions (hit or stick)
+
+def convert_q_values(q_values):
+    """Convert q_values to a JSON-serializable format."""
+    return {str(k): v.tolist() for k, v in q_values.items()}
 
 if __name__ == '__main__':
   main()
