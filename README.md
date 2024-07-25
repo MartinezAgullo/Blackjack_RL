@@ -1,6 +1,6 @@
 # Blackjack
 
-Training a reinforced learning model to learn to play Blackjack. It is based on Farama's Gymnasium [ToyText](https://gymnasium.farama.org/environments/toy_text/blackjack/)environment.
+Training a reinforced learning model to learn to play Blackjack. It is based on Farama's Gymnasium [ToyText](https://gymnasium.farama.org/environments/toy_text/blackjack/) environment.
     
     gymnasium.make("Blackjack-v1")
 
