@@ -1,7 +1,10 @@
 # Ussage
 To train and save the model
+    
     python Train_Blackjack.py
+
 To play it
+    
     python Play_Blackjack.py
 
 
